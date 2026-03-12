@@ -1,14 +1,12 @@
-FROM ubuntu:22.04
+FROM php:8.2-fpm-alpine
 
-RUN apt update && apt install -y \
-    nginx \
-    php-fpm \
-    php-mysql \
-    curl
+RUN apk add --no-cache nginx
 
-COPY app /var/www/html
-COPY nginx/default.conf /etc/nginx/sites-available/default
+WORKDIR /var/www/html
+
+COPY app/ /var/www/html
+COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 80
 
-CMD service php8.1-fpm start && nginx -g "daemon off;"
+CMD php-fpm -D && nginx -g "daemon off;"
